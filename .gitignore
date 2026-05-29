@@ -1,0 +1,9 @@
+# Gitignore for deployment
+mlruns/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+.env
+.venv
+

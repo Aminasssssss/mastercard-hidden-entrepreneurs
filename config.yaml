@@ -1,0 +1,64 @@
+# MDQ Hidden Entrepreneur Detection — конфиг проекта
+# Все настраиваемые параметры в одном месте.
+
+model:
+  version: "1.0.0"
+  type: "one_class_ensemble"
+  n_methods: 6
+  weights: "uniform"
+  seed: 42
+
+data:
+  business_cards: "../business_cards_MDQ.parquet"
+  consumer_cards: "../consumer_cards_MDQ.parquet"
+  merchants_ref: "../merchants_reference.parquet"
+  scored_top_n: 2000
+  period_months: 6
+
+scoring:
+  flag_threshold_percentile: 97.5   # топ-2.5% помечаются как кандидаты
+  confidence_thresholds:
+    high: 0.66
+    medium: 0.33
+
+segmentation:
+  n_clusters: 4
+  segment_names:
+    - "Digital Marketing / E-commerce"
+    - "Logistics / Supply"
+    - "IT / Professional Services"
+    - "General Small Business"
+  offers:
+    "Digital Marketing / E-commerce": "POS-эквайринг + рекламные инструменты"
+    "Logistics / Supply": "Оборотный кредит + корп-карты"
+    "IT / Professional Services": "Зарплатный проект + кассовые решения"
+    "General Small Business": "Бизнес-карта + кросс-продажи"
+
+roi_defaults:
+  arpu_uplift_kzt_per_month: 8000
+  conversion_rate: 0.20
+  outreach_cost_kzt: 500
+  horizon_months: 12
+
+monitoring:
+  psi_threshold_warning: 0.10
+  psi_threshold_alert: 0.20
+  retraining_schedule: "quarterly"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["*"]
+  rate_limit_per_minute: 1000
+
+streamlit:
+  port: 8501
+  theme:
+    primary_color: "#EB001B"
+    secondary_color: "#1A1F71"
+    accent_color: "#F79E1B"
+
+mlflow:
+  port: 5000
+  tracking_uri: "file:./mlruns"
+  experiment_name: "hidden_entrepreneur_detection"
